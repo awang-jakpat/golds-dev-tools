@@ -1,6 +1,7 @@
 package goldpay
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/awang-jakpat/golds-dev-tools/httphelper"
@@ -10,6 +11,9 @@ import (
 type GoldpayConfig struct {
 	// API url for goldpay payment
 	GoldpayApiUrl string
+
+	// Authenticated user token
+	AuthenticatedUserToken string
 }
 
 type goldpayApiResponse struct {
@@ -33,6 +37,11 @@ func (gp *goldPay) Pay(amount float64) (payment.PaymentInfo, error) {
 
 	httpReq := helper.Request(http.MethodPost, gp.config.GoldpayApiUrl, map[string]any{
 		"weight": amount,
+	})
+
+	httpReq.SetHeaderFn(func(req *http.Request) error {
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", gp.config.AuthenticatedUserToken))
+		return nil
 	})
 
 	var response goldpayApiResponse
