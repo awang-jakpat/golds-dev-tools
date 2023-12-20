@@ -1,3 +1,3 @@
-module langit.kerupux.com/golds/golds-dev-tools
+module github.com/awang-jakpat/golds-dev-tools
 
 go 1.21.5
