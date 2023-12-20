@@ -3,8 +3,8 @@ package goldpay
 import (
 	"net/http"
 
-	"langit.kerupux.com/golds/golds-dev-tools/httphelper"
-	"langit.kerupux.com/golds/golds-dev-tools/payment"
+	"github.com/awang-jakpat/golds-dev-tools/httphelper"
+	"github.com/awang-jakpat/golds-dev-tools/payment"
 )
 
 type GoldpayConfig struct {
