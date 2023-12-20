@@ -6,6 +6,7 @@ import (
 
 	"github.com/awang-jakpat/golds-dev-tools/httphelper"
 	"github.com/awang-jakpat/golds-dev-tools/payment"
+	"github.com/awang-jakpat/golds-dev-tools/payment/paymentstatus"
 )
 
 type GoldpayConfig struct {
@@ -49,8 +50,13 @@ func (gp *goldPay) Pay(amount float64) (payment.PaymentInfo, error) {
 		return payment.PaymentInfo{}, err
 	}
 
+	var status string
+	if response.Status == "completed" {
+		status = paymentstatus.PAID
+	}
+
 	return payment.PaymentInfo{
 		ID:     response.ID,
-		Status: response.Status,
+		Status: status,
 	}, nil
 }
