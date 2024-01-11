@@ -1,4 +1,4 @@
-package goldpay
+package nicepay
 
 import (
 	"fmt"
