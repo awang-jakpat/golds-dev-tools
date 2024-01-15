@@ -45,16 +45,16 @@ func (np *nicepay) Pay(amount float64) (payment.PaymentInfo, error) {
 		return payment.PaymentInfo{}, err
 	}
 
-	helper := httphelper.HttpHelper{}
+	helper := httphelper.NewHttpHelper(&http.Client{}, &httphelper.HttpConfig{})
+	helper.SetHeaderFn(func(req *http.Request) error {
+		req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
+		return nil
+	})
 	httpReq := helper.Request(
 		http.MethodPost,
 		fmt.Sprintf("%s/payments/%s", np.config.ImpAPIUrl, np.config.ImpUid),
 		map[string]any{},
 	)
-	httpReq.SetHeaderFn(func(req *http.Request) error {
-		req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
-		return nil
-	})
 
 	var result nicepayApiResponse
 	if err := httpReq.Decode(&result); err != nil {

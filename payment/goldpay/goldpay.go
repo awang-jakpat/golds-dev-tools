@@ -34,15 +34,14 @@ func NewGoldpayPayment(config *GoldpayConfig) payment.Payment {
 
 // Pay will invoke goldpay API to make a transfer transaction from user to upstore wallet
 func (gp *goldPay) Pay(amount float64) (payment.PaymentInfo, error) {
-	helper := httphelper.HttpHelper{}
+	helper := httphelper.NewHttpHelper(&http.Client{}, &httphelper.HttpConfig{})
 
-	httpReq := helper.Request(http.MethodPost, gp.config.GoldpayApiUrl, map[string]any{
-		"weight": amount,
-	})
-
-	httpReq.SetHeaderFn(func(req *http.Request) error {
+	helper.SetHeaderFn(func(req *http.Request) error {
 		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", gp.config.AuthenticatedUserToken))
 		return nil
+	})
+	httpReq := helper.Request(http.MethodPost, gp.config.GoldpayApiUrl, map[string]any{
+		"weight": amount,
 	})
 
 	var response goldpayApiResponse
