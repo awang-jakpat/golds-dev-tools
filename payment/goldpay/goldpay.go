@@ -18,8 +18,12 @@ type GoldpayConfig struct {
 }
 
 type goldpayApiResponse struct {
-	ID     string `json:"id"`
-	Status string `json:"status"`
+	Success  bool   `json:"success"`
+	Messsage string `json:"message"`
+	Data     struct {
+		ID     string `json:"id"`
+		Status string `json:"status"`
+	} `json:"data"`
 }
 
 type goldPay struct {
@@ -50,12 +54,13 @@ func (gp *goldPay) Pay(amount float64) (payment.PaymentInfo, error) {
 	}
 
 	var status string
-	if response.Status == "completed" {
+	var data = response.Data
+	if data.Status == "completed" {
 		status = paymentstatus.PAID
 	}
 
 	return payment.PaymentInfo{
-		ID:     response.ID,
+		ID:     data.ID,
 		Status: status,
 	}, nil
 }
