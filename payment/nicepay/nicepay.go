@@ -1,7 +1,9 @@
 package nicepay
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/awang-jakpat/golds-dev-tools/httphelper"
@@ -51,7 +53,7 @@ func (np *nicepay) Pay(amount float64) (payment.PaymentInfo, error) {
 		return nil
 	})
 	httpReq := helper.Request(
-		http.MethodPost,
+		http.MethodGet,
 		fmt.Sprintf("%s/payments/%s", np.config.ImpAPIUrl, np.config.ImpUid),
 		map[string]any{},
 	)
@@ -62,6 +64,8 @@ func (np *nicepay) Pay(amount float64) (payment.PaymentInfo, error) {
 	}
 
 	response := result.Response
+	t, _ := json.Marshal(response)
+	log.Println(t)
 
 	var status string
 	if response.Status == "paid" {
