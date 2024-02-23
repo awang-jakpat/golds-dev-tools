@@ -87,15 +87,14 @@ func (np *nicepay) getAccessToken() (string, error) {
 	}
 	var response getAccessTokenResponse
 
-	helper := httphelper.HttpHelper{}
+	helper := httphelper.NewHttpHelper(&http.Client{}, &httphelper.HttpConfig{})
+	helper.SetHeaderFn(func(req *http.Request) error {
+		return nil
+	})
 
 	httpReq := helper.Request(http.MethodPost, np.config.ImpAPIUrl+"/users/getToken", map[string]any{
 		"imp_key":    np.config.ImpKey,
 		"imp_secret": np.config.ImpSecret,
-	})
-
-	httpReq.SetHeaderFn(func(req *http.Request) error {
-		return nil
 	})
 
 	if err := httpReq.Decode(&response); err != nil {
