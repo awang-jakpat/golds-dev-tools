@@ -52,6 +52,7 @@ func (np *nicepay) Pay(amount float64) (payment.PaymentInfo, error) {
 		req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
 		return nil
 	})
+
 	httpReq := helper.Request(
 		http.MethodGet,
 		fmt.Sprintf("%s/payments/%s", np.config.ImpAPIUrl, np.config.ImpUid),
