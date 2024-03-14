@@ -1,9 +1,7 @@
 package nicepay
 
 import (
-	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/awang-jakpat/golds-dev-tools/httphelper"
@@ -19,15 +17,10 @@ type NicepayConfig struct {
 	ImpUid    string
 }
 
-type nicepayPaymentAnnotation struct {
-	ID     string `json:"id"`
-	Status string `json:"status"`
-}
-
 type nicepayApiResponse struct {
-	Code     int                      `json:"code"`
-	Message  string                   `json:"message"`
-	Response nicepayPaymentAnnotation `json:"response"`
+	Code     int                              `json:"code"`
+	Message  string                           `json:"message"`
+	Response payment.NicepayPaymentAnnotation `json:"response"`
 }
 
 type nicepay struct {
@@ -65,8 +58,6 @@ func (np *nicepay) Pay(amount float64) (payment.PaymentInfo, error) {
 	}
 
 	response := result.Response
-	t, _ := json.Marshal(response)
-	log.Println(t)
 
 	var status string
 	if response.Status == "paid" {
@@ -74,8 +65,9 @@ func (np *nicepay) Pay(amount float64) (payment.PaymentInfo, error) {
 	}
 
 	return payment.PaymentInfo{
-		ID:     response.ID,
-		Status: status,
+		ID:      response.ID,
+		Status:  status,
+		Nicepay: response,
 	}, nil
 }
 
